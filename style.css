@@ -25,13 +25,14 @@ p {
 	color: #eee;
 	font-size: 18px;
 	margin-left: -38px;
+	text-shadow: 2px 1px 0px rgba(148, 150, 150, 0.59);
 }
 
 .score-board {
 	background-color: purple;
 	color: #eee;
-	border: 2px dotted black;
-	height: 495px;
+	border: 5px dotted black;
+	height: 300px;
 	font-size: 30px;
 	text-align: center;
 	padding-top: 10px;
@@ -41,7 +42,7 @@ p {
 .card {
 	height: 200px;
 	background-color: #eee;
-	border: black 1px solid;
+	border: black 5px solid;
 	flex-direction: column;
 	display: flex;
 	justify-content: center;
@@ -53,12 +54,11 @@ p {
 	padding: 5px;
 	font-size: 50px;
 	line-height: 5%;
-	color: purple;
-
+	text-shadow: 2px 1px 0px rgba(148, 150, 150, 0.59);
 }
 
 .mid {
-	height: 50px;
+	height: 20px;
 }
 
 .col-md-2 {
