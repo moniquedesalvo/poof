@@ -1,0 +1,66 @@
+body {
+	background-color: #0066cc;
+}
+
+aside {
+	background-color: #0066cc;
+	height: 100%;
+}
+
+main {
+	background-color: #0066cc;
+	height: 100%;
+}
+
+img {
+	width: 100%;
+}
+
+header {
+	height: 50px;
+	background-color: #0066cc;
+}
+
+p {
+	color: #eee;
+	font-size: 18px;
+	margin-left: -38px;
+}
+
+.score-board {
+	background-color: purple;
+	color: #eee;
+	border: 2px dotted black;
+	height: 495px;
+	font-size: 30px;
+	text-align: center;
+	padding-top: 10px;
+	font-weight: bold;
+}
+
+.card {
+	height: 200px;
+	background-color: #eee;
+	border: black 1px solid;
+	flex-direction: column;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+
+.card span {
+	padding: 5px;
+	font-size: 50px;
+	line-height: 5%;
+	color: purple;
+
+}
+
+.mid {
+	height: 50px;
+}
+
+.col-md-2 {
+	margin: .5em;
+}
