@@ -11,7 +11,6 @@ var Card = function(shape, texture, number, color) { //data structures
 	this.cardDiv = null;
 }
 
-
 /*
 	Generate a new HTMLDOMElement (or jQuery equiv) that contains the card and all it's attendant properties
 	It should store a reference to that card in a property on the constructor
@@ -28,13 +27,17 @@ Card.prototype.render = function(game) {
 	this.cardDiv.data('color', this.color);
 
 	this.cardDiv.click(function(){
-		game.firstSelectedCard = self;
-		self.cardDiv.addClass("selected");
-		//push into an array instead
-		console.log(game.firstSelectedCard)
-		// check to make sure it hasn't been selected already, if it has, un-select it and remove from array
-		//call win chcecking function
-
+		if(self.cardDiv.hasClass("selected")) {
+			self.cardDiv.removeClass("selected");
+			var index = $.inArray(self, game.selectedCards);
+			if (index >= 0) {
+				game.selectedCards.splice(index, 1)
+			}
+		} else if (game.selectedCards.length < 3) {
+			game.selectedCards.push(self)
+			self.cardDiv.addClass("selected");
+		}
+		game.determineWin();
 	});
 	return this.cardDiv
 };
@@ -65,16 +68,13 @@ Deck.prototype.deal = function(game) {
 		var row = $("#row" + (j % 3))
 		row.append(randomCard.render(game));
 		//push onto dealtCards
-
+		
 	}	
 	// push all the cards from dealtCards into the game's cards on board
 }
 
 
 var Game = function() {
-	this.firstSelectedCard = {};
-	this.secondSelectedCard = {};
-	this.thirdSelectedCard = {};
 	this.selectedCards = [];
 	this.isASet = false;
 	this.dealCount = 12;
@@ -91,95 +91,30 @@ deck.deal(game);
 //use every lodash
 
 Game.prototype.determineWin = function() {
-	//is there a set?
-	if (this.firstSelectedCard.shape === this.secondSelectedCard.shape && this.secondSelectedCard.shape === this.thirdSelectedCard.shape && this.firstSelectedCard.shape === this.thirdSelectedCard || this.firstSelectedCard.shape !== this.secondSelectedCard.shape && this.secondSelectedCard.shape !== this.thirdSelectedCard.shape && this.firstSelectedCard !== this.thirdSelectedCard) {
+	if (game.selectedCards[0].shape === game.selectedCards[1].shape && game.selectedCards[1].shape === game.selectedCards[2].shape && game.selectedCards[0].shape === game.selectedCards[2].shape || game.selectedCards[0].shape !== game.selectedCards[1].shape && game.selectedCards[1].shape !== game.selectedCards[2].shape && game.selectedCards[0].shape !== game.selectedCards[2].shape) {
 		var checkShape = true;
 	}
-	if (this.firstSelectedCard.texture === this.secondSelectedCard.texture && this.secondSelectedCard.texture === this.thirdSelectedCard.texture && this.firstSelectedCard.texture === this.thirdSelectedCard.texture || this.firstSelectedCard.texture !== this.secondSelectedCard.texture && this.secondSelectedCard.texture !== this.thirdSelectedCard.texture && this.firstSelectedCard.texture !== this.thirdSelectedCard.texture) {
+	if (game.selectedCards[0].texture === game.selectedCards[1].texture && game.selectedCards[1].texture === game.selectedCards[2].texture && game.selectedCards[0].texture === game.selectedCards[2].texture || game.selectedCards[0].texture !== game.selectedCards[1].texture && game.selectedCards[1].texture !== game.selectedCards[2].texture && game.selectedCards[0].texture !== game.selectedCards[2].texture) {
 		var checkTexture = true;
 	}
-	if (this.firstSelectedCard.number === this.secondSelectedCard.number && this.secondSelectedCard.number === this.thirdSelectedCard.number && this.firstSelectedCard.number === this.thirdSelectedCard.number || this.firstSelectedCard.number !== this.secondSelectedCard.number && this.secondSelectedCard.number !== this.thirdSelectedCard.number && this.firstSelectedCard.number !== this.thirdSelectedCard.number) {
+	if (game.selectedCards[0].number === game.selectedCards[1].number && game.selectedCards[1].number === game.selectedCards[2].number && game.selectedCards[0].number === game.selectedCards[2].number || game.selectedCards[0].number !== game.selectedCards[1].number && game.selectedCards[1].number !== game.selectedCards[2].number && game.selectedCards[0].number !== game.selectedCards[2].number) {
 		var checkNumber = true;
 	}
-	if (this.firstSelectedCard.color === this.secondSelectedCard.color && this.secondSelectedCard.color === this.thirdSelectedCard.color && this.firstSelectedCard.color === this.thirdSelectedCard.color || this.firstSelectedCard.color !== this.secondSelectedCard.color && this.secondSelectedCard.color !== this.thirdSelectedCard.color && this.firstSelectedCard.color !== this.thirdSelectedCard.color) {
+	if (game.selectedCards[0].color === game.selectedCards[1].color && game.selectedCards[1].color === game.selectedCards[2].color && game.selectedCards[0].color === game.selectedCards[2].color || game.selectedCards[0].color !== game.selectedCards[1].color && game.selectedCards[1].color !== game.selectedCards[2].color && game.selectedCards[0].color !== game.selectedCards[2].color) {
 		var checkColor = true;
 	}
 	if (checkShape || checkTexture || checkNumber || checkColor) {
 		this.isASet = true;
+		console.log("This is a set!")
 	} else {
 		this.isASet = false;
+		console.log("This is not a set!")
 	}
+	// if (this.isASet) {
+
+	// }
 	//poof + 3 cards
 // Game.prototype.setEventHandlers = function() {
 
 }
-
-
-// var game = new Game();
-
-
-// //window.onload ????
-// // register event handlers
-// // $(".card").click(function () {
-// var cardDivs = $('.card');
-// for(var i = 0; i < cardDivs.length; i++) {
-// 	$(cardDivs[i]).click(function(evt){
-// 			// console.log($(this).data())
-// 		game.firstSelectedCard = $(this).data()
-// 		game.secondSelectedCard = $(this).data()
-// 		game.thirdSelectedCard = $(this).data()
-// 	});
-// }
-
-// console.log(game.firstSelectedCard)
-// console.log(game.secondSelectedCard)
-// console.log(game.thirdSelectedCard)
-
-	// do stuff
-	// game.firstSelectedCard = {blahblah}
-	//clicked cards?
-	//call determine win
-// });
-
-
-// 	var cardDivs = $('.card');
-// 	for(var i = 0; i < cardDivs.length; i++) {
-// 		$(cardDivs[i]).click(function(evt){
-// 			if (evt.target.children[0] !== undefined) {
-// 				console.log(evt.target.children[0].className);
-// 				console.log(evt.target.children.length);
-// 				console.log(this.style.color);
-// 			} else {
-// 				console.log(evt.target.className);
-// 				console.log(evt.target.offsetParent.children.length);
-// 				console.log(this.style.color);
-// 			}
-// 		});	
-// 	}
-// }
-
-// determineWin();
-
-// var testString = "icon-circlesolid"
-// var foundMatch = testString.match(/circle/g)
-
-
-// 1)shape1, shape2, shape3 are all the same or all different -> return true
-
-// 2)shading1, shading2, shading3 are all the same or all different -> return true
-
-// 3)# of shapes all the same or all different -> return true
-
-// 4)colors all the same or all different -> return true
-
-// if any of the above is false... not a set
-
-
-// generate 81 cards into a list?
-// shuffle
-// take one out 
-
-// clicking cards
-// logic, determining what's a set
-
 

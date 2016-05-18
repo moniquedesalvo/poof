@@ -68,3 +68,7 @@ p {
 .col-md-2 {
 	margin: .5em;
 }
+
+.selected {
+	border: orange 10px solid;
+}
