@@ -1,47 +1,54 @@
-var shapes = ['icon-heartsolid', 'icon-heartopen','icon-heartstripe', 'icon-starsolid', 'icon-starstripe', 'icon-staropen', 'icon-circlesolid', 'icon-circleopen', 'icon-circlestripe']
-var colors = ['#00b8e6', '#9900cc', '#ff0066']
-var number = [1, 2, 3]
-var cards = ['card1', 'card2', 'card3', 'card4', 'card5', 'card6', 'card7', 'card8', 'card9', 'card10', 'card11', 'card12']
+var shapes = ['heart', 'star', 'circle'];
+var textures = ['solid', 'stripe', 'open'];
+var colors = ['#00b8e6', '#9900cc', '#ff0066'];
+// var cardDivs = ['card1', 'card2', 'card3', 'card4', 'card5', 'card6', 'card7', 'card8', 'card9', 'card10', 'card11', 'card12'];
 
-var deck = [];
+var Card = function(shape, texture, number, color) {
+	this.shape = shape;
+	this.texture = texture;
+	this.number = number;
+	this.color = color;
+}
 
-function generateDeck() {
+var Deck = function() {
+	this.cards = [];
+}
+
+Deck.prototype.generateDeck = function() {
 	for(var i = 0; i < shapes.length; i++) {
 		for(var l = 1; l <= 3; l++) {
 			for(var m = 0; m < colors.length; m++) {
-				if (deck.indexOf() === -1) {
-					deck.push(shapes[i] + '|' + l + '|' + colors[m]);
+				for( var k = 0; k < textures.length; k++) {
+					this.cards.push(new Card(shapes[i], textures[k], l, colors[m]));
 				}
 			}
 		}
 	}
-	return deck;
+	return this.cards;
 }
 
-generateDeck();
-
-function deal() {
-	for(var j = 0; j < cards.length; j++) {
-	var currentCard = cards[j];
-	var randomCardIndex = Math.floor(Math.random() * deck.length);
-	var randomCard = deck[randomCardIndex];
-	deck.splice(randomCardIndex, 1)
-	var singleCardArray = randomCard.split('|');
-	var randomShape = singleCardArray[0]; 
-	var randomNumber = singleCardArray[1];
-	var randomColor = singleCardArray[2];
-		for(var k = 1; k <= randomNumber; k++) {
-			$('#' + currentCard).append('<span class="' + randomShape + '"></span>').css('color', randomColor);
+Deck.prototype.deal = function() {
+	var cardDivs = $('.card');
+	for(var j = 0; j < cardDivs.length; j++) {
+	var currentCard = cardDivs[j];
+	var randomCardIndex = Math.floor(Math.random() * this.cards.length);
+	var randomCard = this.cards[randomCardIndex];
+	console.log(randomCard)
+	this.cards.splice(randomCardIndex, 1)
+		for(var k = 1; k <= randomCard.number; k++) {
+			$(currentCard).append('<span class="icon-' + randomCard.shape + randomCard.texture + '"></span>').css('color', randomCard.color);
 		}
 	}	
 }
 
-deal();
-
+var deck = new Deck;
+deck.generateDeck()
+deck.deal()
 
 function determineWin() {
-	for(var i = 0; i < cards.length; i++) {
-		$('#' + cards[i]).click(function(evt){
+	var cardDivs = $('.card');
+	for(var i = 0; i < cardDivs.length; i++) {
+		$(cardDivs[i]).click(function(evt){
 			if (evt.target.children[0] !== undefined) {
 				console.log(evt.target.children[0].className)
 				console.log(evt.target.children.length)
@@ -59,10 +66,8 @@ function determineWin() {
 determineWin();
 
 var testString = "icon-circlesolid"
-var shape = testString.match(/circle/g)
-var shading = testString.match(/solid/g)
-console.log(shape, "shape")
-console.log(shading)
+var foundMatch = testString.match(/circle/g)
+
 
 // 1)shape1, shape2, shape3 are all the same or all different -> return true
 
@@ -75,14 +80,10 @@ console.log(shading)
 // if any of the above is false... not a set
 
 
-
-
-
-
-
-// generate 81 cards into a list
+// generate 81 cards into a list?
 // shuffle
 // take one out 
+
 // clicking cards
 // logic, determining what's a set
 
