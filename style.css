@@ -21,14 +21,18 @@ header {
 	background-color: #0066cc;
 }
 
-p {
+h2 {
 	color: #eee;
-	font-size: 18px;
-	margin-left: -38px;
 	text-shadow: 2px 1px 0px rgba(148, 150, 150, 0.59);
 }
 
-.score-board {
+p {
+	color: #eee;
+	font-size: 18px;
+	text-shadow: 2px 1px 0px rgba(148, 150, 150, 0.59);
+}
+
+/*.score-board {
 	background-color: purple;
 	color: #eee;
 	border: 5px dotted black;
@@ -37,7 +41,7 @@ p {
 	text-align: center;
 	padding-top: 10px;
 	font-weight: bold;
-}
+}*/
 
 .card {
 	height: 200px;
