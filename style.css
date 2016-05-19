@@ -4,12 +4,12 @@ body {
 
 aside {
 	background-color: #0066cc;
-	height: 100%;
+	width: 100%;
 }
 
 main {
 	background-color: #0066cc;
-	height: 100%;
+	width: 100%;
 }
 
 img {
@@ -28,24 +28,13 @@ h2 {
 
 p {
 	color: #eee;
-	font-size: 18px;
+	font-size: 120%;
 	text-shadow: 2px 1px 0px rgba(148, 150, 150, 0.59);
 }
 
-/*.score-board {
-	background-color: purple;
-	color: #eee;
-	border: 5px dotted black;
-	height: 300px;
-	font-size: 30px;
-	text-align: center;
-	padding-top: 10px;
-	font-weight: bold;
-}*/
-
 .card {
 	height: 200px;
-	width: 15%;
+	width: 150px;
 	background-color: #eee;
 	border: black 5px solid;
 	flex-direction: column;
@@ -53,6 +42,16 @@ p {
 	justify-content: center;
 	align-items: center;
 
+}
+
+#addCards {
+	height: 50px;
+	border: none;
+	color: black;
+}
+
+#addCards:focus {
+	outline: none;
 }
 
 .card span {
@@ -66,10 +65,20 @@ p {
 	height: 20px;
 }
 
-.col-md-2 {
+.col-xs-2 {
 	margin: .5em;
 }
 
 .selected {
 	border: orange 10px solid;
+}
+
+#wrapper {
+    margin-left:auto;
+    margin-right:auto;
+    width:1510px;
+}
+
+.poof {
+	content:url(cloud.png);
 }
