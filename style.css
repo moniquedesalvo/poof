@@ -13,7 +13,7 @@ main {
 }
 
 img {
-	width: 100%;
+	width: 80%;
 }
 
 header {
@@ -45,6 +45,7 @@ p {
 
 .card {
 	height: 200px;
+	width: 15%;
 	background-color: #eee;
 	border: black 5px solid;
 	flex-direction: column;

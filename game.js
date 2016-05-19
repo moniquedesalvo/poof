@@ -10,7 +10,6 @@ var Card = function(shape, texture, number, color) { //data structures
 	this.color = color;
 	this.cardDiv = null;
 }
-
 /*
 	Generate a new HTMLDOMElement (or jQuery equiv) that contains the card and all it's attendant properties
 	It should store a reference to that card in a property on the constructor
@@ -27,6 +26,7 @@ Card.prototype.render = function(game) {
 	this.cardDiv.data('color', this.color);
 
 	this.cardDiv.click(function(){
+
 		if(self.cardDiv.hasClass("selected")) {
 			self.cardDiv.removeClass("selected");
 			var index = $.inArray(self, game.selectedCards);
@@ -37,9 +37,11 @@ Card.prototype.render = function(game) {
 			game.selectedCards.push(self)
 			self.cardDiv.addClass("selected");
 		}
-		game.determineWin();
+		if (game.selectedCards.length == 3) {
+			game.determineWin();
+		}
 	});
-	return this.cardDiv
+	return this.cardDiv;
 };
 
 var Deck = function() {
@@ -59,38 +61,40 @@ Deck.prototype.generateDeck = function() {
 	return this.cards;
 }
 
-Deck.prototype.deal = function(game) {
-	var dealtCards = [];
-	for(var j = 0; j < game.dealCount; j++) {
+Deck.prototype.deal = function(game, numberOfCards) {
+	for(var j = 0; j < numberOfCards; j++) {
 		var randomCardIndex = Math.floor(Math.random() * this.cards.length);
 		var randomCard = this.cards[randomCardIndex];
 		this.cards.splice(randomCardIndex, 1);
-		var row = $("#row" + (j % 3))
-		row.append(randomCard.render(game));
-		//push onto dealtCards
-		
+		game.cardsOnBoard.push(randomCard);
 	}	
-	// push all the cards from dealtCards into the game's cards on board
 }
-
 
 var Game = function() {
 	this.selectedCards = [];
-	this.isASet = false;
-	this.dealCount = 12;
 	this.cardsOnBoard = [];
+	this.isASet = false;
+	// this.dealCount = 12;
 }
 
+Game.prototype.render = function() {
+	$('#row0').empty();
+	$('#row1').empty();
+	$('#row2').empty();
+	for(var i = 0; i < this.cardsOnBoard.length; i++) {
+		var row = $("#row" + (i % 3));
+		row.append(this.cardsOnBoard[i].render(this));
+	}
+}
 
 var game = new Game();
 var deck = new Deck();
 deck.generateDeck();
-deck.deal(game);
-
+deck.deal(game, 12);
+game.render();
 
 //use every lodash
-
-Game.prototype.determineWin = function() {
+Game.prototype.determineWin = function(card) {
 	if (game.selectedCards[0].shape === game.selectedCards[1].shape && game.selectedCards[1].shape === game.selectedCards[2].shape && game.selectedCards[0].shape === game.selectedCards[2].shape || game.selectedCards[0].shape !== game.selectedCards[1].shape && game.selectedCards[1].shape !== game.selectedCards[2].shape && game.selectedCards[0].shape !== game.selectedCards[2].shape) {
 		var checkShape = true;
 	}
@@ -103,18 +107,30 @@ Game.prototype.determineWin = function() {
 	if (game.selectedCards[0].color === game.selectedCards[1].color && game.selectedCards[1].color === game.selectedCards[2].color && game.selectedCards[0].color === game.selectedCards[2].color || game.selectedCards[0].color !== game.selectedCards[1].color && game.selectedCards[1].color !== game.selectedCards[2].color && game.selectedCards[0].color !== game.selectedCards[2].color) {
 		var checkColor = true;
 	}
-	if (checkShape || checkTexture || checkNumber || checkColor) {
+	if (checkShape && checkTexture && checkNumber && checkColor) {
 		this.isASet = true;
 		console.log("This is a set!")
+		this.cardsOnBoard = _.difference(this.cardsOnBoard, this.selectedCards)
+		this.selectedCards = [];
+		deck.deal(this, 3);
+		//add new cards to board from deck
 	} else {
 		this.isASet = false;
 		console.log("This is not a set!")
+		this.selectedCards = [];
+		
 	}
+	this.render()
+
+}
+
+
+
 	// if (this.isASet) {
+		//replace with another card
+		//add 1 to sets found
+		//
 
 	// }
 	//poof + 3 cards
 // Game.prototype.setEventHandlers = function() {
-
-}
-
