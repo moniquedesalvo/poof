@@ -93,7 +93,8 @@ p {
 }
 
 .selected {
-	background-color: #ff99ff;
+	border-color: #23EAEA;
+	background-color: white;
 }
 
 #wrapper {
@@ -103,5 +104,10 @@ p {
 }
 
 .poof {
-	content:url(cloud.png);
+	background-image:url(cloud.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 200px;
+	width: 150px;
 }

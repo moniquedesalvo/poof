@@ -1,7 +1,6 @@
 var shapes = ['heart', 'star', 'circle'];
 var textures = ['solid', 'stripe', 'open'];
-var colors = ['#00b8e6', '#9900cc', '#ff0066'];
-var cardDivs = $('.card');
+var colors = ['#0066cc', '#9900cc', '#ff0066'];
 
 var Card = function(shape, texture, number, color) { 
 	this.shape = shape;
@@ -21,26 +20,19 @@ Card.prototype.render = function(game) {
 	this.cardDiv.data('texture', this.texture);
 	this.cardDiv.data('number', this.number);
 	this.cardDiv.data('color', this.color);
-	
-	this.cardDiv.click(function(){
+	this.cardDiv.click(function() {
 		if(self.cardDiv.hasClass("selected")) {
 			self.cardDiv.removeClass("selected");
 			var index = $.inArray(self, game.selectedCards);
 			if (index >= 0) {
-				game.selectedCards.splice(index, 1)
+				game.selectedCards.splice(index, 1);
 			}
 		} else if (game.selectedCards.length < 3) {
-			game.selectedCards.push(self)
+			game.selectedCards.push(self);
 			self.cardDiv.addClass("selected");
 		}
-		if (game.selectedCards.length === 3 && game.isASet()) {
-			setTimeout(function(){
-				game.determineWin();
-			}, 1500);
-			setTimeout(function() {
-				$('.selected').empty()
-				$('.selected').append('<img src="cloud.png"/>');
-			}, 500);
+		if (game.selectedCards.length === 3) {
+			game.determineWin();
 		}
 	});
 	return this.cardDiv;
@@ -76,6 +68,9 @@ var Game = function() {
 	this.selectedCards = [];
 	this.cardsOnBoard = [];
 	this.setsFound = 0;
+	this.poof = new Audio('sounds/poof.wav');
+	this.buzz = new Audio('sounds/buzz.mp3');
+	// this.win = new Audio('sounds/win.wav');
 }
 
 Game.prototype.render = function() {
@@ -88,24 +83,7 @@ Game.prototype.render = function() {
 	}
 }
 
-//use every lodash
-Game.prototype.determineWin = function(card) {
-	if(this.isASet()) {
-		console.log("This is a set!");
-		this.setsFound += 1;
-		$('#setCount').text(this.setsFound);
-		this.cardsOnBoard = _.difference(this.cardsOnBoard, this.selectedCards);
-		this.selectedCards = [];	
-		if(this.cardsOnBoard.length < 12) {
-			deck.deal(this, 3);	
-		}
-	} else {
-		console.log("This is not a set!");
-		this.selectedCards = [];	
-	}
-	this.render()
-}
-
+//re-do w/ lodash 'every':
 Game.prototype.isASet = function() {
 	if (game.selectedCards[0].shape === game.selectedCards[1].shape && game.selectedCards[1].shape === game.selectedCards[2].shape && game.selectedCards[0].shape === game.selectedCards[2].shape || game.selectedCards[0].shape !== game.selectedCards[1].shape && game.selectedCards[1].shape !== game.selectedCards[2].shape && game.selectedCards[0].shape !== game.selectedCards[2].shape) {
 		var checkShape = true;
@@ -126,15 +104,41 @@ Game.prototype.isASet = function() {
 	}
 }
 
+Game.prototype.determineWin = function(card) {
+	var self = this;
+	if(self.isASet()) {
+		setTimeout(function(){
+			self.cardsOnBoard = _.difference(self.cardsOnBoard, self.selectedCards);
+			self.selectedCards = [];
+			if(self.cardsOnBoard.length < 12) {
+				deck.deal(self, 3);
+			}
+			self.render();	
+		}, 1500);
+		setTimeout(function() {
+			$('.selected').replaceWith('<div class="col-xs-2 poof"></div>');
+			self.poof.play();
+			self.win.play();
+		}, 300);
+		console.log("This is a set!");
+		self.setsFound += 1;
+		$('#setCount').text(self.setsFound);
+		
+	} else {
+		console.log("self is not a set!");
+		setTimeout(function(){
+			self.selectedCards = [];
+			self.render();	
+		}, 600);
+		self.buzz.play();
+	}
+}
 
 $('#addCards').click(function(){
 	if(game.cardsOnBoard.length < 18) {
 		deck.deal(game, 3);
 		game.render();	
 	}
-	// if (game.cardsOnBoard.length === 18) {
-	// 	$('#addCards').css('background-color', 'gray')
-	// }	
 });
 
 var game = new Game();
