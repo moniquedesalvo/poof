@@ -13,7 +13,7 @@ main {
 }
 
 img {
-	width: 80%;
+	width: 100%;
 }
 
 header {
@@ -44,6 +44,29 @@ p {
 
 }
 
+@-webkit-keyframes rainbow {
+ 	0% {
+ 		border-color: hsl(0, 100%, 50%);
+ 	}
+ 	25% {
+ 		border-color: hsl(90, 100%, 50%);
+ 	}
+ 	50% {
+ 		border-color: hsl(180, 100%, 50%);
+ 	}
+ 	75% {
+ 		border-color: hsl(270, 100%, 50%);
+ 	}
+	100% {
+		border-color: hsl(360, 100%, 50%);
+	}
+}
+
+.card:hover {
+	border: 5px solid hsl(0, 100%, 50%);
+  	-webkit-animation: rainbow .3s infinite;
+}
+
 #addCards {
 	height: 50px;
 	border: none;
@@ -70,7 +93,7 @@ p {
 }
 
 .selected {
-	border: orange 10px solid;
+	background-color: #ff99ff;
 }
 
 #wrapper {

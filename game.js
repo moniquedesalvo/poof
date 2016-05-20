@@ -33,9 +33,13 @@ Card.prototype.render = function(game) {
 			game.selectedCards.push(self)
 			self.cardDiv.addClass("selected");
 		}
-		if (game.selectedCards.length == 3) {
-			setTimeout(function(){ 
+		if (game.selectedCards.length === 3 && game.isASet()) {
+			setTimeout(function(){
 				game.determineWin();
+			}, 1500);
+			setTimeout(function() {
+				$('.selected').empty()
+				$('.selected').append('<img src="cloud.png"/>');
 			}, 500);
 		}
 	});
@@ -71,7 +75,6 @@ Deck.prototype.deal = function(game, numberOfCards) {
 var Game = function() {
 	this.selectedCards = [];
 	this.cardsOnBoard = [];
-	this.isASet = false;
 	this.setsFound = 0;
 }
 
@@ -87,6 +90,23 @@ Game.prototype.render = function() {
 
 //use every lodash
 Game.prototype.determineWin = function(card) {
+	if(this.isASet()) {
+		console.log("This is a set!");
+		this.setsFound += 1;
+		$('#setCount').text(this.setsFound);
+		this.cardsOnBoard = _.difference(this.cardsOnBoard, this.selectedCards);
+		this.selectedCards = [];	
+		if(this.cardsOnBoard.length < 12) {
+			deck.deal(this, 3);	
+		}
+	} else {
+		console.log("This is not a set!");
+		this.selectedCards = [];	
+	}
+	this.render()
+}
+
+Game.prototype.isASet = function() {
 	if (game.selectedCards[0].shape === game.selectedCards[1].shape && game.selectedCards[1].shape === game.selectedCards[2].shape && game.selectedCards[0].shape === game.selectedCards[2].shape || game.selectedCards[0].shape !== game.selectedCards[1].shape && game.selectedCards[1].shape !== game.selectedCards[2].shape && game.selectedCards[0].shape !== game.selectedCards[2].shape) {
 		var checkShape = true;
 	}
@@ -99,24 +119,13 @@ Game.prototype.determineWin = function(card) {
 	if (game.selectedCards[0].color === game.selectedCards[1].color && game.selectedCards[1].color === game.selectedCards[2].color && game.selectedCards[0].color === game.selectedCards[2].color || game.selectedCards[0].color !== game.selectedCards[1].color && game.selectedCards[1].color !== game.selectedCards[2].color && game.selectedCards[0].color !== game.selectedCards[2].color) {
 		var checkColor = true;
 	}
-	// if (checkShape && checkTexture && checkNumber && checkColor) {
-	if(true) {
-		this.isASet = true;
-		console.log("This is a set!")
-		this.setsFound += 1;
-		$('#setCount').text(this.setsFound)
-		this.cardsOnBoard = _.difference(this.cardsOnBoard, this.selectedCards)
-		this.selectedCards = [];
-		if(this.cardsOnBoard.length < 12) {
-			deck.deal(this, 3);
-		}		
+	if (checkShape && checkTexture && checkNumber && checkColor) {
+		return true;
 	} else {
-		this.isASet = false;
-		console.log("This is not a set!")
-		this.selectedCards = [];	
+		return false;
 	}
-	this.render();
 }
+
 
 $('#addCards').click(function(){
 	if(game.cardsOnBoard.length < 18) {
